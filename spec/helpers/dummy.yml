@@ -1,0 +1,11 @@
+Test Nested Secrets:
+  username: 'baddeveloper'
+  password: 'gettingbetter'
+  Nested Secret:
+    username: 'gothere'
+    password: 'nowhere'
+    Super Nested Secret:
+      username: 'bestdeveever'
+      password: 'justkiddingyousuck'
+Nonested Secrets: "My Name Is what..."
+Unnested Secrets: "Slim Shady"
