@@ -26,10 +26,19 @@ module Yurl
 
         ################################ Class Methods #################################
 
-        def self.find_nested(query_array, source_array)
-            ret_val = source_array
+        # Method to Follow String to Yaml Node. 
+        def self.find(needle_string, haystack)
+            query_list = YurlReader.process_query_string(needle_string)
+            ret_val = YurlReader.find_nested(query_list, haystack)
+            return "Parameter Not Found At Path - #{needle_string}" if ret_val.nil?
+            ret_val
+        end
+        
+        # Method To Follow Array Path To Find Yaml Target
+        def self.find_nested(needle_array, haystack)
+            ret_val = haystack
             loop do
-                param = query_array.pop
+                param = needle_array.pop
                 break if ( ret_val.nil? || param.nil?)
                 ret_val = YurlReader.find_internal(param, ret_val)
             end
@@ -43,8 +52,8 @@ module Yurl
         end
         
         # Method to Parse Query List in Query Array 
-        def self.process_query_string(query_string)
-            query_list = query_string.split('/')
+        def self.process_query_string(needle)
+            query_list = needle.split('/')
             raise ArgumentError, 'Query String In Wrong Format' unless query_list.respond_to?('each')
             query_list.reverse
         end
@@ -67,13 +76,12 @@ module Yurl
 
         # Dump The Yaml File - Yaml to Hash
         def self.dump_yaml(yaml_hash)
-            puts "YAML Dump Of - #{@file_name}"
             yaml_hash
         end
 
         # Pretty Print The YAML File - Yaml To String
         def self.pretty_print_yaml(yaml_hash)
-            "Pretty Print The YAML Dump - #{@file_name}" + yaml_hash.pretty_inspect
+            yaml_hash.pretty_inspect
         end
     end
 end

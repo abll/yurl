@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 RSpec.describe Yurl::YurlReader do
+  let(:needle_string) { 'Test Nested Secrets/Nested Secret/Super Nested Secret/username' }
   let(:test_val) { Yurl::YurlReader.new('spec/helpers/dummy.yml') }
   let(:param) { Yurl::YurlReader.process_query_string('Test Nested Secrets/Nested Secret/Super Nested Secret/username') }
   let(:non_param) { Yurl::YurlReader.process_query_string('Test Nested Secrets/Nested Secret/Super Nested Secret/usernames') }
@@ -12,7 +13,7 @@ RSpec.describe Yurl::YurlReader do
 
   ################### Test Class Level Methods ######################
 
-  it 'can load an yaml file' do
+  it 'can load a yaml file' do
     test_file = Yurl::YurlReader.load_file('spec/helpers/dummy.yml')
     expect(test_file).to respond_to('each')
   end
@@ -43,7 +44,7 @@ RSpec.describe Yurl::YurlReader do
     expect(non_assoc_arr).to eq(nil)
   end
 
-  it 'can find a nested element' do
+  it 'can find a nested element given an array' do
     nested_arr = Yurl::YurlReader.find_nested(param, test_val.secret_ruby)
     non_nested_arr = Yurl::YurlReader.find_nested(non_param, test_val.secret_ruby)
     
@@ -51,19 +52,24 @@ RSpec.describe Yurl::YurlReader do
     expect(non_nested_arr).to eq(nil)
   end
 
+  it 'can find a nested element given a string' do
+    test = Yurl::YurlReader.find('Test Nested Secrets/Nested Secret', test_val.secret_ruby)
+    test2 = Yurl::YurlReader.find('Test Nested Secrets/Nested Secret/', test_val.secret_ruby)
+    test3 = Yurl::YurlReader.find('Test Nested Secrets/Nested Secrets', test_val.secret_ruby)
+    
+    expect(test).to be_instance_of(Hash)
+    expect(test['username']).to eq('gothere')
+    expect(test['username']).to eq(test2['username'])
+    expect(test3).to include('Parameter Not Found At Path')
+  end
+
   it 'can dump the yaml hash' do
     dumped_yaml = Yurl::YurlReader.dump_yaml(test_val.secret_ruby)
-    puts dumped_yaml
-    puts dumped_yaml.class
-
-    expect(true).to eq(true)
+    expect(dumped_yaml).to be_instance_of(Hash)
   end
 
   it 'can pretty print the yaml class' do
     pretty_yaml = Yurl::YurlReader.pretty_print_yaml(test_val.secret_ruby)
-    puts pretty_yaml
-    puts pretty_yaml.class
-    
-    expect(true).to eq(true)
+    expect(pretty_yaml).to be_instance_of(String)
   end
 end
