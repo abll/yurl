@@ -37,21 +37,15 @@ module Yurl
         end
 
          # Method To Check If Param Is A Key In The Array
-        def self.find_internal(param, array)
-            return nil unless (array.respond_to?('each'))
-            if(array[param].nil?)
-                return nil
-            else
-                array[param]
-            end
+        def self.find_internal(param, hash)
+            return nil unless (hash.class == Hash && (!hash[param].nil?))
+            hash[param]
         end
         
         # Method to Parse Query List in Query Array 
         def self.process_query_string(query_string)
-            puts query_string
             query_list = query_string.split('/')
             raise ArgumentError, 'Query String In Wrong Format' unless query_list.respond_to?('each')
-            pp query_list
             query_list.reverse
         end
 
@@ -71,61 +65,15 @@ module Yurl
             @secret_ruby = psych_yml.to_ruby
         end
 
-        # Dump The Yaml File
-        def self.dump_yaml
+        # Dump The Yaml File - Yaml to Hash
+        def self.dump_yaml(yaml_hash)
             puts "YAML Dump Of - #{@file_name}"
-            puts @secret_ruby
+            yaml_hash
         end
 
-        # Pretty Print The YAML File
-        def self.pretty_print_yaml
-            puts "Pretty Print The YAML Dump - #{@file_name}"
-            pp @secret_ruby 
+        # Pretty Print The YAML File - Yaml To String
+        def self.pretty_print_yaml(yaml_hash)
+            "Pretty Print The YAML Dump - #{@file_name}" + yaml_hash.pretty_inspect
         end
-       
     end
 end
-
-=begin
-
-        def initialize(yml_file)
-            raise ArgumentError, 'Attempted To Process Null Object' if (yml_file.nil?)
-            raise ArgumentError, 'Attempted To Process Non YAML File' unless ((File.extname(yml_file) == '.yml') || (File.extname(yml_file) == '.yaml'))
-            @file_name = yml_file
-            @secret_ruby = File.open(yml_file)
-            #@secret_ruby = Psych.parse_file(yml_file).to_ruby
-            #@secret_ruby = "Psych.methods"
-            #self.secret_ruby = Psych.parse_file
-            puts @secret_ruby
-        end
-
-
-            # Method To Check If Param Is A Key In The Array
-        def find_internal(param, array)
-            return nil unless (array.respond_to?('each'))
-            
-            if(array[param].nil?)
-                return nil
-            else
-                return array[param]
-            end
-
-                    # Method To Cycle Through Query Array And Ruby Object Of The Yaml
-        def find_nested(query_array)
-            ret_val = @secret_ruby
-            loop do
-                param = query_array.pop
-                break if ((ret_val.nil?) || (param.nil?))
-                ret_val = YurlReader.find_internal(param, ret_val)
-            end
-            ret_val
-        end
-
-        def self.find_internal(param, array)
-            return nil unless ( array.respond_to?('each') || !array[param].nil? )
-            
-            array[param]
-
-        end
-        end
-=end
