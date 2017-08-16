@@ -1,2 +1,2 @@
-#!/usr/bin/env ruby
-print "Test Nested Secrets\n"
+require 'yurl/cli'
+Yurl::CLI.start
