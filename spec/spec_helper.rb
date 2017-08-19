@@ -1,6 +1,8 @@
 require "bundler/setup"
 require "yurl"
 require "yurl/yurl_reader"
+require "yurl/cli"
+require 'aruba/rspec'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
