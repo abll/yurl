@@ -1,22 +1,22 @@
-# Class File To Implement Yurl_Reader
+# Class File To Implement Yurl Engine
 require 'psych'
 require 'pp'
 
 module Yurl
-    class YurlReader
+    class Engine
         attr_accessor :secret_ruby, :file_name
 
         ######################################### Instance Variables ##########################################
 
-        # Constructor for YurlReader Class
+        # Constructor for Engine Class
         def initialize(yml_file)
             @file_name = yml_file
-            @secret_ruby = YurlReader.load_file(yml_file)
+            @secret_ruby = Engine.load_file(yml_file)
         end
         
         # Method To Find Nodes With Specific Values
         def find(query)
-            query_list = YurlReader.process_query_string(query)
+            query_list = Engine.process_query_string(query)
             ret = self.find_nested(query_list)
             if ret.nil?
                 return "Parameter Not Found At Path - #{query}"
@@ -28,8 +28,8 @@ module Yurl
 
         # Method to Follow String to Yaml Node. 
         def self.find(needle_string, haystack)
-            query_list = YurlReader.process_query_string(needle_string)
-            ret_val = YurlReader.find_nested(query_list, haystack)
+            query_list = Engine.process_query_string(needle_string)
+            ret_val = Engine.find_nested(query_list, haystack)
             return "Parameter Not Found At Path - #{needle_string}" if ret_val.nil?
             ret_val
         end
@@ -40,7 +40,7 @@ module Yurl
             loop do
                 param = needle_array.pop
                 break if ( ret_val.nil? || param.nil?)
-                ret_val = YurlReader.find_internal(param, ret_val)
+                ret_val = Engine.find_internal(param, ret_val)
             end
             ret_val
         end
@@ -58,8 +58,8 @@ module Yurl
             query_list.reverse
         end
 
-        # Self File Loader For YurlReader Class
-        # Need to put in logic about an empty yaml file
+        # Self File Loader For Engine Class
+        # Need to put in logic about an empty yaml file / non - existent YAML File
         def self.load_file(yml_file)
             raise ArgumentError, 'Attempted To Process Null Object' if yml_file.nil?
             raise ArgumentError, 'Attempted To Process Non YAML File' unless ((File.extname(yml_file) == '.yml') || (File.extname(yml_file) == '.yaml'))

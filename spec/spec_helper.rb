@@ -1,6 +1,6 @@
 require "bundler/setup"
 require "yurl"
-require "yurl/yurl_reader"
+require "yurl/engine"
 require "yurl/cli"
 require 'aruba/rspec'
 

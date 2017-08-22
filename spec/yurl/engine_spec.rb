@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-RSpec.describe Yurl::YurlReader do
+RSpec.describe Yurl::Engine do
   let(:needle_string) { 'Test Nested Secrets/Nested Secret/Super Nested Secret/username' }
-  let(:test_val) { Yurl::YurlReader.new('spec/helpers/dummy.yml') }
-  let(:param) { Yurl::YurlReader.process_query_string('Test Nested Secrets/Nested Secret/Super Nested Secret/username') }
-  let(:non_param) { Yurl::YurlReader.process_query_string('Test Nested Secrets/Nested Secret/Super Nested Secret/usernames') }
+  let(:test_val) { Yurl::Engine.new('spec/yurl/helpers/dummy.yml') }
+  let(:param) { Yurl::Engine.process_query_string('Test Nested Secrets/Nested Secret/Super Nested Secret/username') }
+  let(:non_param) { Yurl::Engine.process_query_string('Test Nested Secrets/Nested Secret/Super Nested Secret/usernames') }
 
   it 'constructor instantiates instance variables' do
     expect(test_val.file_name).to be_instance_of(String)
@@ -14,7 +14,7 @@ RSpec.describe Yurl::YurlReader do
   ################### Test Class Level Methods ######################
 
   it 'can load a yaml file' do
-    test_file = Yurl::YurlReader.load_file('spec/helpers/dummy.yml')
+    test_file = Yurl::Engine.load_file('spec/yurl/helpers/dummy.yml')
     expect(test_file).to respond_to('each')
   end
 
@@ -24,7 +24,7 @@ RSpec.describe Yurl::YurlReader do
   end
 
   it 'parses directly passed yaml' do
-    test_yaml = Yurl::YurlReader.load_yaml("---\n - Test Yaml\n - More Yaml")
+    test_yaml = Yurl::Engine.load_yaml("---\n - Test Yaml\n - More Yaml")
     expect(test_yaml).to respond_to('each')
   end
 
@@ -35,9 +35,9 @@ RSpec.describe Yurl::YurlReader do
   end
 
   it 'can search a hash for a parameter' do
-    in_arr = Yurl::YurlReader.find_internal('Nonested Secrets', test_val.secret_ruby)
-    out_arr = Yurl::YurlReader.find_internal('Nonested Secret', test_val.secret_ruby)
-    non_assoc_arr = Yurl::YurlReader.find_internal('username', param)
+    in_arr = Yurl::Engine.find_internal('Nonested Secrets', test_val.secret_ruby)
+    out_arr = Yurl::Engine.find_internal('Nonested Secret', test_val.secret_ruby)
+    non_assoc_arr = Yurl::Engine.find_internal('username', param)
 
     expect(in_arr).to be_instance_of(String)
     expect(out_arr).to eq(nil)
@@ -45,17 +45,17 @@ RSpec.describe Yurl::YurlReader do
   end
 
   it 'can find a nested element given an array' do
-    nested_arr = Yurl::YurlReader.find_nested(param, test_val.secret_ruby)
-    non_nested_arr = Yurl::YurlReader.find_nested(non_param, test_val.secret_ruby)
+    nested_arr = Yurl::Engine.find_nested(param, test_val.secret_ruby)
+    non_nested_arr = Yurl::Engine.find_nested(non_param, test_val.secret_ruby)
     
     expect(nested_arr).to eq('bestdeveever')
     expect(non_nested_arr).to eq(nil)
   end
 
   it 'can find a nested element given a string' do
-    test = Yurl::YurlReader.find('Test Nested Secrets/Nested Secret', test_val.secret_ruby)
-    test2 = Yurl::YurlReader.find('Test Nested Secrets/Nested Secret/', test_val.secret_ruby)
-    test3 = Yurl::YurlReader.find('Test Nested Secrets/Nested Secrets', test_val.secret_ruby)
+    test = Yurl::Engine.find('Test Nested Secrets/Nested Secret', test_val.secret_ruby)
+    test2 = Yurl::Engine.find('Test Nested Secrets/Nested Secret/', test_val.secret_ruby)
+    test3 = Yurl::Engine.find('Test Nested Secrets/Nested Secrets', test_val.secret_ruby)
     
     expect(test).to be_instance_of(Hash)
     expect(test['username']).to eq('gothere')
@@ -64,12 +64,12 @@ RSpec.describe Yurl::YurlReader do
   end
 
   it 'can dump the yaml hash' do
-    dumped_yaml = Yurl::YurlReader.dump_yaml(test_val.secret_ruby)
+    dumped_yaml = Yurl::Engine.dump_yaml(test_val.secret_ruby)
     expect(dumped_yaml).to be_instance_of(Hash)
   end
 
   it 'can pretty print the yaml class' do
-    pretty_yaml = Yurl::YurlReader.pretty_print_yaml(test_val.secret_ruby)
+    pretty_yaml = Yurl::Engine.pretty_print_yaml(test_val.secret_ruby)
     expect(pretty_yaml).to be_instance_of(String)
   end
 end

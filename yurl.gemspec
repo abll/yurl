@@ -37,6 +37,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "aruba", "~> 0.4"
   spec.add_development_dependency "thor", "~>0.19"
 
-    #Gem Dependencies
-  spec.add_dependency "psych", "~> 2.2.4"
+  #Gem Dependencies
+  spec.add_dependency "psych", "~> 2.2"
 end
