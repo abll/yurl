@@ -13,12 +13,14 @@ RSpec.describe Yurl::Engine do
 
   ################### Test Class Level Methods ######################
 
-  it 'can load a yaml file' do
+  it 'can load a YAML/YML file' do
     test_file = Yurl::Engine.load_file('spec/yurl/helpers/dummy.yml')
     expect(test_file).to respond_to('each')
+    # test_file = Yurl::Engine.load_file('spec/yurl/helpers/dummy.yaml')
+    # expect(test_file).to respond_to('each')
   end
 
-  # Need to Mock opening non yaml file
+  # Need to Mock opening non yaml file - Need To Implement
   it 'throws an error when non yaml file passed' do
     expect(true).to eq(true)
   end
@@ -26,6 +28,17 @@ RSpec.describe Yurl::Engine do
   it 'parses directly passed yaml' do
     test_yaml = Yurl::Engine.load_yaml("---\n - Test Yaml\n - More Yaml")
     expect(test_yaml).to respond_to('each')
+  end
+
+  it 'handles a non-existent file being passed to load' do
+    expect {Yurl::Engine.load_file('doesntExist.yml')}.to raise_error(IOError)
+  end
+
+  # Need To Mock Empty YAML File - Need To Implement
+  it 'throws an error when an empty YAML file passed' do
+    #File.stub!(:exists?).and_return(true)
+    empty_file =double(File, :filename => "mock.yaml")
+    expect {Yurl::Engine.load_file(empty_file.filename)}.to raise_error(IOError)
   end
 
   it 'parses string yaml path to param array' do

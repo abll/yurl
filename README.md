@@ -1,8 +1,8 @@
 # Yurl
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/yurl`. To experiment with that code, run `bin/console` for an interactive prompt.
+Welcome to yurl, a ruby gem inspired by a problem and a conversation. The problem - the abundance of YAML files in Rails, Cloud Foundry, Docker and whatever your favorite tool is. I wanted a way to easily access the information in these files, without having to have multiple tabs open in my text editor. After looking at vault.io (way too much overhead) and creating config servers in both Spring and Node-red (boo java && javascript), a conversation with an intern (Thanks Nick T) led me to a much simpler solution (KISS always works). Yurl (Yaml Url) is a command line tool that attempts to mirror the curl/REST interface to query information from YAML files.
 
-TODO: Delete this and the text above, and describe your gem
+Yurl is both my first ruby gem and open source project of any kind, it was and continues to be a great learning experience. I plan to refactor and implement new features so please excuse the bugs, weird commits and bad code(lol) and feel free to contribute. 
 
 ## Installation
 
@@ -22,7 +22,13 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Given a directory with yaml file named "info.yaml" with contents: 
+Production:
+    Database:
+        Username: foo
+        password : bar
+
+Running yurl get --path=<path to directory>/info.yaml "Production/Database/Username" yields "foo"
 
 ## Development
 

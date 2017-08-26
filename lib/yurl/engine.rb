@@ -61,17 +61,17 @@ module Yurl
         # Self File Loader For Engine Class
         # Need to put in logic about an empty yaml file / non - existent YAML File
         def self.load_file(yml_file)
-            raise ArgumentError, 'Attempted To Process Null Object' if yml_file.nil?
-            raise ArgumentError, 'Attempted To Process Non YAML File' unless ((File.extname(yml_file) == '.yml') || (File.extname(yml_file) == '.yaml'))
-            @file_name = yml_file
-            Psych.parse_file(yml_file).to_ruby
+            Engine.check_load_params(yml_file)
+            ret_val = Psych.parse_file(yml_file).to_ruby
+            raise ArgumentError, 'Attempted To Process Empty YAML File' if (ret_val == false)      
+            ret_val
         end
 
         # Loading Yaml From Directly Passed Yaml Text
         def self.load_yaml(yml)
             raise ArgumentError, 'Attempted To Process Null Object' if (yml.nil?)
-            psych_yml = Psych.parse(yml)
-            @secret_ruby = psych_yml.to_ruby
+            ret_val = Psych.parse(yml).to_ruby
+            ret_val
         end
 
         # Dump The Yaml File - Yaml to Hash
@@ -82,6 +82,12 @@ module Yurl
         # Pretty Print The YAML File - Yaml To String
         def self.pretty_print_yaml(yaml_hash)
             yaml_hash.pretty_inspect
+        end
+
+        def self.check_load_params(yml_file)
+            raise ArgumentError, 'Attempted To Process Nil File Object' if yml_file.nil?
+            raise ArgumentError, 'Attempted To Process Non YAML File' unless ((File.extname(yml_file) == '.yml') || (File.extname(yml_file) == '.yaml'))
+            raise IOError, 'Attempted To Process Non-Existent YAML File' unless File.exist?(yml_file)
         end
     end
 end

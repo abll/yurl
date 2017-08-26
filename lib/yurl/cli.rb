@@ -1,6 +1,8 @@
 require 'thor'
 require 'pp'
+require_relative 'aka'
 require_relative 'api'
+require 'yurl'
 
 module Yurl
     class CLI < Thor
@@ -8,6 +10,8 @@ module Yurl
         def hello 
             puts "Hello World!!"
         end
+
+        ######################## Engine ############################
         
         desc "dump YAML", "Dumps Yaml Passed To Method"
         option :path
@@ -25,11 +29,26 @@ module Yurl
             puts Yurl::API.get(options[:path], options[:aka], options[:pp],needle)
         end
 
-        desc "inserts YAML to File", "Inserts Yaml "
-        option :path
-        option :aka
-        def post(yaml_url, value)
-            puts "Need To Implement!!!"
-        end        
+        ######################### AKA ############################
+        
+        desc "List Everything in AKA", "Dumps Aka"
+        def list 
+            puts Yurl::API.list
+        end
+
+        desc "Add AKA and paths", "Inserts Elements To AKA"
+        def add(aka, path)
+            puts Yurl::API.add(aka, path)
+        end
+
+        desc "Remove AKA", "Removes AKA From AKA List"
+        def remove(aka)
+            puts Yurl::API.remove(aka)
+        end
+
+        desc "List version of yurl gem", "Lists version"
+        def version
+            puts Yurl::VERSION
+        end
     end
 end
