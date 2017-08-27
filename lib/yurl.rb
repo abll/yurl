@@ -1,4 +1,4 @@
-require "yurl/version"
+require 'yurl/version'
 
 module Yurl
 end

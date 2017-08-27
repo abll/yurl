@@ -1,3 +1,3 @@
 module Yurl
-    AKA_PATH= ".aka.yaml"
+  AKA_PATH = '.aka.yaml'.freeze
 end

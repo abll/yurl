@@ -31,14 +31,14 @@ RSpec.describe Yurl::Engine do
   end
 
   it 'handles a non-existent file being passed to load' do
-    expect {Yurl::Engine.load_file('doesntExist.yml')}.to raise_error(IOError)
+    expect { Yurl::Engine.load_file('doesntExist.yml') }.to raise_error(IOError)
   end
 
   # Need To Mock Empty YAML File - Need To Implement
   it 'throws an error when an empty YAML file passed' do
-    #File.stub!(:exists?).and_return(true)
-    empty_file =double(File, :filename => "mock.yaml")
-    expect {Yurl::Engine.load_file(empty_file.filename)}.to raise_error(IOError)
+    # File.stub!(:exists?).and_return(true)
+    empty_file = double(File, filename: 'mock.yaml')
+    expect { Yurl::Engine.load_file(empty_file.filename) }.to raise_error(IOError)
   end
 
   it 'parses string yaml path to param array' do
@@ -60,7 +60,7 @@ RSpec.describe Yurl::Engine do
   it 'can find a nested element given an array' do
     nested_arr = Yurl::Engine.find_nested(param, test_val.secret_ruby)
     non_nested_arr = Yurl::Engine.find_nested(non_param, test_val.secret_ruby)
-    
+
     expect(nested_arr).to eq('bestdeveever')
     expect(non_nested_arr).to eq(nil)
   end
@@ -69,7 +69,7 @@ RSpec.describe Yurl::Engine do
     test = Yurl::Engine.find('Test Nested Secrets/Nested Secret', test_val.secret_ruby)
     test2 = Yurl::Engine.find('Test Nested Secrets/Nested Secret/', test_val.secret_ruby)
     test3 = Yurl::Engine.find('Test Nested Secrets/Nested Secrets', test_val.secret_ruby)
-    
+
     expect(test).to be_instance_of(Hash)
     expect(test['username']).to eq('gothere')
     expect(test['username']).to eq(test2['username'])
