@@ -60,7 +60,7 @@ module Yurl
     # Need to put in logic about an empty yaml file / non - existent YAML File
     def self.load_file(yml_file)
       file_check = Engine.check_load_params(yml_file)
-      return file_check unless (file_check == true)
+      return file_check unless file_check == true
       Psych.parse_file(yml_file).to_ruby
     end
 
@@ -90,7 +90,7 @@ module Yurl
       rescue StandardError => e
         return "Exception raised with message - #{e.message}"
       end
-      return true
+      true
     end
   end
 end

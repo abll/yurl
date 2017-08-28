@@ -21,7 +21,7 @@ module Yurl
     def self.load_list(aka_file)
       return 'Unable To Initalize AKA List' unless AKA.init_list(aka_file) == true
       yurl_object = Yurl::Engine.load_file(aka_file)
-      return yurl_object unless (yurl_object.respond_to?(:has_key?))
+      return yurl_object unless yurl_object.respond_to?(:has_key?)
       @aka_list = yurl_object
       @aka_list
     end
@@ -71,6 +71,5 @@ module Yurl
       return "Cannot find AKA #{aka_elem} in AKA List" unless @aka_list.key?(aka_elem.to_s)
       @aka_list[aka_elem]
     end
-
   end
 end

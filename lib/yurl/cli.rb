@@ -47,7 +47,7 @@ module Yurl
     end
 
     ######################### CLI ############################
-    
+
     desc 'List version of yurl gem', 'Lists version'
     def version
       puts Yurl::VERSION

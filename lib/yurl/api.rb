@@ -12,7 +12,7 @@ module Yurl
       pp ||= false
       unless path.nil?
         yurl_object = Yurl::Engine.load_file(path)
-        return yurl_object unless (yurl_object.respond_to?(:has_key?))
+        return yurl_object unless yurl_object.respond_to?(:has_key?)
         return Yurl::API.return_yurl(yurl_object, pp)
       end
       unless aka.nil?
@@ -29,7 +29,7 @@ module Yurl
       pp ||= false
       unless path.nil?
         haystack = Yurl::Engine.load_file(path)
-        return haystack unless (haystack.respond_to?(:has_key?))
+        return haystack unless haystack.respond_to?(:has_key?)
         temp = Yurl::Engine.find(yaml_url, haystack)
         return Yurl::API.return_yurl(temp, pp)
       end
@@ -37,7 +37,7 @@ module Yurl
         haystack = Yurl::Engine.load_file(
           Yurl::AKA.get_aka(Yurl::AKA_PATH, aka)
         )
-        return haystack unless (haystack.respond_to?(:has_key?))
+        return haystack unless haystack.respond_to?(:has_key?)
         temp = Yurl::Engine.find(yaml_url, haystack)
         return Yurl::API.return_yurl(temp, pp)
       end
