@@ -13,14 +13,15 @@ module Yurl
       unless path.nil?
         yurl_object = Yurl::Engine.load_file(path)
         return yurl_object unless (yurl_object.respond_to?(:has_key?))
-        return Yurl::Engine.pretty_print_yaml(yurl_object) if pp
-        return Yurl::Engine.dump_yaml(yurl_object)
+        return Yurl::API.return_yurl(yurl_object, pp)
       end
-      return 'AKA Not Implemented Yet' unless aka.nil?
-      unless yaml.nil?
-        return Yurl::Engine.pretty_print_yaml(yaml) if pp
-        return Yurl::Engine.dump_yaml(yaml)
+      unless aka.nil?
+        yurl_object = Yurl::Engine.load_file(
+          Yurl::AKA.get_aka(Yurl::AKA_PATH, aka)
+        )
+        return Yurl::API.return_yurl(yurl_object, pp)
       end
+      return Yurl::API.return_yurl(yaml, pp) unless yaml.nil?
       'No YAML found for yurl to process'
     end
 
@@ -30,10 +31,16 @@ module Yurl
         haystack = Yurl::Engine.load_file(path)
         return haystack unless (haystack.respond_to?(:has_key?))
         temp = Yurl::Engine.find(yaml_url, haystack)
-        return Yurl::Engine.pretty_print_yaml(temp) if pp
-        return Yurl::Engine.dump_yaml(temp)
+        return Yurl::API.return_yurl(temp, pp)
       end
-      return 'AKA Not Implemented Yet' unless aka.nil?
+      unless aka.nil?
+        haystack = Yurl::Engine.load_file(
+          Yurl::AKA.get_aka(Yurl::AKA_PATH, aka)
+        )
+        return haystack unless (haystack.respond_to?(:has_key?))
+        temp = Yurl::Engine.find(yaml_url, haystack)
+        return Yurl::API.return_yurl(temp, pp)
+      end
       "No Values found at specified location - #{yaml_url}"
     end
 
@@ -47,6 +54,11 @@ module Yurl
 
     def self.remove(aka)
       Yurl::AKA.remove(Yurl::AKA_PATH, aka)
+    end
+
+    def self.return_yurl(yurl_object, pp)
+      return Yurl::Engine.pretty_print_yaml(yurl_object) if pp == true
+      Yurl::Engine.dump_yaml(yurl_object)
     end
   end
 end

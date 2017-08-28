@@ -46,6 +46,8 @@ module Yurl
       puts Yurl::API.remove(aka)
     end
 
+    ######################### CLI ############################
+    
     desc 'List version of yurl gem', 'Lists version'
     def version
       puts Yurl::VERSION

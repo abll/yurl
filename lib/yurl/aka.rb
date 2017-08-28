@@ -32,28 +32,29 @@ module Yurl
     end
 
     def self.add(aka_file, aka_elem, path)
-      return 'Error Adding To AKA List - Cannot Load List' unless AKA.check_list(aka_file) == true
-      # Need to Implement Path Validates Path Leads To Yaml
+      return 'Error Adding To AKA List - Cannot Load List' unless
+        AKA.check_list(aka_file) == true
       return "Error - Can't add Non YAML Files To AKA List" unless
         Yurl::Engine.check_load_params(path) == true
-      # Check If Key Already Exists in AKA
       return 'Aka Key Already Exists' if @aka_list.key?(aka_elem)
-      # Add File To Hash Array
       @aka_list[aka_elem] = path
       AKA.save_list(aka_file)
-      "Added AKA - #{aka_elem} with path #{path}" 
+      "Added AKA - #{aka_elem} with path #{path}"
     end
 
     def self.remove(aka_file, aka_elem)
-      return 'Error Adding To AKA List - Cannot Load List' unless AKA.check_list(aka_file) == true
-      return "Cannot find AKA #{aka_elem} in AKA List" unless @aka_list.key?(aka_elem)
+      return 'Error Adding To AKA List - Cannot Load List' unless
+        AKA.check_list(aka_file) == true
+      return "Cannot find AKA #{aka_elem} in AKA List" unless
+        @aka_list.key?(aka_elem)
       @aka_list.delete(aka_elem)
       AKA.save_list(aka_file)
       "Deleted AKA - #{aka_elem}"
     end
 
     def self.print_list(aka_file)
-      return 'Error Printing List - Cannot Load List' if AKA.check_list(aka_file).nil?
+      return 'Error Printing List - Cannot Load List' if
+        AKA.check_list(aka_file).nil?
       @aka_list
     end
 
