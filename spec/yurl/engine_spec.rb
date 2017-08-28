@@ -16,13 +16,17 @@ RSpec.describe Yurl::Engine do
   it 'can load a YAML/YML file' do
     test_file = Yurl::Engine.load_file('spec/yurl/helpers/dummy.yml')
     expect(test_file).to respond_to('each')
-    # test_file = Yurl::Engine.load_file('spec/yurl/helpers/dummy.yaml')
-    # expect(test_file).to respond_to('each')
+    yaml_file = double(File, filename: 'mock.yaml')
+    temp = Yurl::Engine.load_file(yaml_file.filename)
+    expect(temp).to be_instance_of(String)
+    expect(temp).to include('Non-Existent YAML File')
   end
 
-  # Need to Mock opening non yaml file - Need To Implement
   it 'throws an error when non yaml file passed' do
-    expect(true).to eq(true)
+    non_yaml_file = double(File, filename: 'mock.txt')
+    temp = Yurl::Engine.load_file(non_yaml_file.filename)
+    expect(temp).to be_instance_of(String)
+    expect(temp).to include('Non YAML File')
   end
 
   it 'parses directly passed yaml' do
@@ -31,14 +35,18 @@ RSpec.describe Yurl::Engine do
   end
 
   it 'handles a non-existent file being passed to load' do
-    expect { Yurl::Engine.load_file('doesntExist.yml') }.to raise_error(IOError)
+    temp = Yurl::Engine.load_file('doesntExist.yml')
+    expect(temp).to be_instance_of(String)
+    expect(temp).to include('Non-Existent YAML File')
   end
 
-  # Need To Mock Empty YAML File - Need To Implement
+  # Need To Mock Empty YAML File - Need To Implement Better Spec
   it 'throws an error when an empty YAML file passed' do
     # File.stub!(:exists?).and_return(true)
     empty_file = double(File, filename: 'mock.yaml')
-    expect { Yurl::Engine.load_file(empty_file.filename) }.to raise_error(IOError)
+    temp = Yurl::Engine.load_file(empty_file.filename)
+    expect(temp).to be_instance_of(String)
+    expect(temp).to include('Non-Existent YAML File')
   end
 
   it 'parses string yaml path to param array' do

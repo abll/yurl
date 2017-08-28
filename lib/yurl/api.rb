@@ -11,15 +11,10 @@ module Yurl
     def self.dump(path, aka, pp, yaml)
       pp ||= false
       unless path.nil?
-        begin
-          temp = Yurl::Engine.load_file(path)
-        rescue ArgumentError => e
-          return e.message
-        rescue Exception => e
-          return "Unhandled Exception #{e.class} Occurred"
-        end
-        return Yurl::Engine.pretty_print_yaml(temp) if pp
-        return Yurl::Engine.dump_yaml(temp)
+        yurl_object = Yurl::Engine.load_file(path)
+        return yurl_object unless (yurl_object.respond_to?(:has_key?))
+        return Yurl::Engine.pretty_print_yaml(yurl_object) if pp
+        return Yurl::Engine.dump_yaml(yurl_object)
       end
       return 'AKA Not Implemented Yet' unless aka.nil?
       unless yaml.nil?
@@ -33,6 +28,7 @@ module Yurl
       pp ||= false
       unless path.nil?
         haystack = Yurl::Engine.load_file(path)
+        return haystack unless (haystack.respond_to?(:has_key?))
         temp = Yurl::Engine.find(yaml_url, haystack)
         return Yurl::Engine.pretty_print_yaml(temp) if pp
         return Yurl::Engine.dump_yaml(temp)

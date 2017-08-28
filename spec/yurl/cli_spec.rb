@@ -13,7 +13,7 @@ RSpec.describe Yurl::CLI, type: :aruba do
 
   it 'can find a value given a path and query string' do
     run_simple('yurl get --path=../../spec/yurl/helpers/dummy.yml "Test Nested Secrets/username"')
-    expect(last_command_started.output).to include 'baddeveloper'
+    expect(last_command_started.output).to eq("baddeveloper\n")
   end
 
   it 'does not return false positive results' do
