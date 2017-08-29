@@ -22,13 +22,79 @@ Or install it yourself as:
 
 ## Usage
 
-Given a directory with yaml file named "info.yaml" with contents: 
+Given a directory with YAML file named "info.yaml" with contents:
+
+```yaml 
 Production:
     Database:
-        Username: foo
+        username: foo
         password : bar
+        Parameter With Spaces:
+            value: Some More Foo
 
-Running yurl get --path=<path to directory>/info.yaml "Production/Database/Username" yields "foo"
+```
+
+### Dump
+
+This command is used to dump the contents of a yaml file to STD:OUT
+
+    $ yurl dump --path=info.yml
+    #=> {"Production"=>{"Database"=>{"username"=>"foo", "password"=>"bar", "Parameter With Spaces"=>{"value"=>"Some More Foo"}}}}
+
+To pretty print the contents of the YAML file
+
+    $ yurl dump --pp --path=info.yml
+    #=> {"Production"=>
+            {"Database"=>
+                {"username"=>"foo",
+                "password"=>"bar",
+                "Parameter With Spaces"=>{"value"=>"Some More Foo"}}}}
+ 
+### Get
+
+This command is used to access the data at a certain node in the YAML file. To access nested content use a '/' to descend the different nested levels. 
+
+    $ yurl get --path=info.yml Production
+    #=> "Database"=>{"username"=>"foo", "password"=>"bar", "Parameter With Spaces"=>{"value"=>"Some More Foo"}}}
+
+    $ yurl get --path=info.yaml Production/Database/username
+    #=> "foo"
+
+If your YAML fields have spaces enclose them in "" i.e
+
+    $ yurl get --path=info.yml "Production/Database/Parameter With Spaces"
+    #=> {"value"=>"Some More Foo"}
+
+### AKA 
+
+Yurl also has the ability to store paths to yaml files as "also known as" (AKA). In order to shorten the length of commands to access YAML data. To add a element to the AKA List:
+
+    $ yurl add info ./info.yaml
+    #=> Added AKA - info with path ./info.yml
+
+    $ yurl add "aka with spaces" info.yml
+    #=> Added AKA - aka with spaces with path info.yml
+
+To list the current AKA's
+
+    $ yurl list
+    #=> {"AKA List"=>"Add Some AKAs", "aka with spaces"=>"info.yml", "info"=>"info.yml"}
+
+To remove an AKA
+
+    $ yurl remove "AKA List"
+    #=> Deleted AKA - AKA List
+
+    $ yurl list
+    #=> {"aka with spaces"=>"info.yml", "info"=>"info.yml"}
+
+Then YAML information can be queried as such
+
+    $ yurl get --aka=info "Production/Database/Username"
+    #=> "foo"
+
+    $ yurl get --aka="aka with spaces" "Production/Database/username"
+    #=> "foo"
 
 ## Development
 
@@ -38,7 +104,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/yurl. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/abll/yurl. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
